@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 75px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-left: -10px;
+        }
+        
+        .calculate-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .results {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+    <title>Loan Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Loan Calculator</h1>
+        <form id="loan-form">
+            <div class="form-group">
+                <label for="loan-amount">Loan Amount (INR)</label>
+                <input type="number" id="loan-amount" placeholder="Enter loan amount" required>
+            </div>
+            <div class="form-group">
+                <label for="interest-rate">Interest Rate (%)</label>
+                <input type="number" step="0.01" id="interest-rate" placeholder="Enter interest rate" required>
+            </div>
+            <div class="form-group">
+                <label for="loan-term">Loan Term (years)</label>
+                <input type="number" id="loan-term" placeholder="Enter loan term" required>
+            </div>
+            <div class="form-group" style="text-align: center;">
+                <button type="submit" class="calculate-btn">Calculate</button>
+            </div>
+        </form>
+        <div id="results" class="results"></div>
+    </div>
+    <script>
+        document.getElementById('loan-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+            const interestRate = parseFloat(document.getElementById('interest-rate').value);
+            const loanTerm = parseFloat(document.getElementById('loan-term').value);
+
+            const monthlyInterest = (interestRate / 100) / 12;
+            const numPayments = loanTerm * 12;
+
+            const monthlyPayment = (loanAmount * monthlyInterest) / (1 - Math.pow(1 + monthlyInterest, -numPayments));
+            const totalPayment = monthlyPayment * numPayments;
+            const totalInterest = totalPayment - loanAmount;
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <h2 style="text-align: center;">Loan Summary</h2>
+                <p>Loan Amount: ₹${loanAmount.toFixed(2)}</p>
+                <p>Interest Rate: ${interestRate.toFixed(2)}%</p>
+                <p>Loan Term: ${loanTerm} years</p>
+                <h3>Payments</h3>
+                <p>Monthly Payment: ₹${monthlyPayment.toFixed(2)}</p>
+                <p>Total Payment: ₹${totalPayment.toFixed(2)}</p>
+                <p>Total Interest: ₹${totalInterest.toFixed(2)}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
